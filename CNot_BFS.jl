@@ -1,19 +1,32 @@
+module CNot_BFS
+
 #=
-	In this script, I'm going to try to figure out a CNot network that
+	In this module, I'm going to try to figure out a CNot network that
 	prepares a given CSS stabiliser state using a breadth-first search
-	on an implicit graph whose nodes are stabiliser states (two nodes
-	will be connected by an edge iff the stabiliser states can be
-	transformed into one another using a single CNot).
+	on an implicit graph whose nodes are stabiliser states.
+
+	Two nodes will be connected by an edge iff the stabiliser states
+	can be transformed into one another using a single CNot on a
+	user-provided layout. 
+	
+	If no layout is provided, all-to-all connectivity will be assumed.
 =#
 
 import ImplicitGraphs as IG 
 import IterTools as IT
 import QuantumClifford as QC
 
-function possible_cnots(n_qubits)
-	pairs = collect(IT.subsets(1 : n_qubits, 2))
-	pairs = vcat(pairs, map(reverse, pairs))
-	map(pair -> QC.sCNOT(pair...), pairs)
+function cnot_network(initial_state, final_state, layout=nothing)
+	gate_path(state_path(initial_state, final_state, layout))
+end
+
+function possible_cnots(n_qubits, layout=nothing)
+	if isnothing(layout)
+		layout = collect(IT.subsets(1 : n_qubits, 2))
+	end 
+
+	layout = vcat(pairs, map(reverse, pairs))
+	map(pair -> QC.sCNOT(pair...), layout)
 end
 
 function neighbour_state(current_state, gate)
@@ -22,18 +35,21 @@ function neighbour_state(current_state, gate)
 	new_state
 end
 
-function possible_neighbours(current_state)
-	cnots = possible_cnots(QC.nqubits(current_state))
-	map(cnot -> neighbour_state(current_state, cnot), cnots)
+function possible_neighbours(layout)
+	neighbs(current_state) = begin
+		cnots = possible_cnots(QC.nqubits(current_state), layout)
+		map(cnot -> neighbour_state(current_state, cnot), cnots)
+	end
+
+	neighbs
 end
 
-#=
-	For now, I'm going to try assuming that only edge search generates
-	new vertices
-=#
-search_graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours)
-
-function state_path(initial_state, final_state)
+function state_path(initial_state, final_state, layout=nothing)
+	#=
+		For now, I'm going to try assuming that only edge search generates
+		new vertices
+	=#
+	search_graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
 	QC.canonicalize_gott!(initial_state)
 	QC.canonicalize_gott!(final_state)
 	IG.find_path(search_graph, initial_state, final_state)
@@ -63,3 +79,5 @@ function gate_path(state_path)
 
 	map(edge_cnot, 1 : length(state_path) - 1)
 end
+
+end # module CNot_BFS

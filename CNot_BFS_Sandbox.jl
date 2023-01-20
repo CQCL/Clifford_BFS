@@ -1,7 +1,8 @@
-#=
-	As of July 25, 2022, this only works if you
-	`include("CNot_BFS.jl")` first.
-=#
+include("CNot_BFS.jl")
+import .CNot_BFS
+
+import IterTools as IT
+import QuantumClifford as QC
 
 plus_zero_3 = QC.Stabilizer([QC.P"XIII", QC.P"IZII", QC.P"IIZI", QC.P"IIIZ"])
 cat_state = QC.Stabilizer([QC.P"XXXX", QC.P"ZZII", QC.P"IZZI", QC.P"IIZZ"])
@@ -81,7 +82,7 @@ function all_partitions_cube_prep()
 	z_partitions = map(x_p -> setdiff(qubits, x_p), x_partitions)
 	
 	path_and_length(state) = begin
-		path = state_path(state, cube_final_state_2)
+		path = CNot_BFS.state_path(state, cube_final_state_2)
 		path, length(path)	
 	end
 
@@ -95,7 +96,7 @@ function all_partitions_cube_prep()
 		end
 	end 
 
-	gate_path(shortest_path)
+	CNot_BFS.gate_path(shortest_path)
 end
 
 function cube_separable_state(x_partition, z_partition)
