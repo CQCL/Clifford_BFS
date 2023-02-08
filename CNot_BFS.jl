@@ -25,7 +25,7 @@ function possible_cnots(n_qubits, layout=nothing)
 		layout = collect(IT.subsets(1 : n_qubits, 2))
 	end 
 
-	layout = vcat(pairs, map(reverse, pairs))
+	layout = vcat(layout, map(reverse, layout))
 	map(pair -> QC.sCNOT(pair...), layout)
 end
 
