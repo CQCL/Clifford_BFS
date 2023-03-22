@@ -44,7 +44,22 @@ function possible_neighbours(layout)
 	neighbs
 end
 
-function state_path(initial_state, final_state, layout=nothing)
+@inline weight(p::QC.PauliOperator) = count_ones(p.xz[1] | p.xz[2])
+
+"""
+`is_separable(state)`
+
+For now, we check to see whether a stabilizer state is separable by
+checking whether every stabilizer is weight-one after the state has
+been canonicalized.  
+"""
+function is_separable(state)
+	state_copy = copy(state)
+	QC.canonicalize_gott!(state_copy)
+	all(map(p -> weight(p) == 1, state_copy))
+end
+
+function state_path(initial_state, final_state::QC.Stabilizer, layout=nothing)
 	#=
 		For now, I'm going to try assuming that only edge search generates
 		new vertices
@@ -52,6 +67,12 @@ function state_path(initial_state, final_state, layout=nothing)
 	search_graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
 	QC.canonicalize_gott!(initial_state)
 	QC.canonicalize_gott!(final_state)
+	IG.find_path(search_graph, initial_state, final_state)
+end
+
+function state_path(initial_state, final_state::Function, layout=nothing)
+	search_graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
+	QC.canonicalize_gott!(initial_state)
 	IG.find_path(search_graph, initial_state, final_state)
 end
 

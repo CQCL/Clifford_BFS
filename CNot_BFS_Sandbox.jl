@@ -174,3 +174,4 @@ function cube_separable_state(x_partition, z_partition)
 	QC.Stabilizer(vcat(map(bit -> QC.single_x(8, bit), x_partition),
 		map(bit -> QC.single_z(8, bit), z_partition)))
 end
+
