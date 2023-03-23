@@ -74,77 +74,86 @@ cube_whole_space = QC.Stabilizer([
 									QC.P"IIIXIIII", QC.P"IIIIIIIX"
 								])
 
+planar_832_plus_state = QC.Stabilizer([
+									QC.P"ZZZZIIIIIIII", QC.P"XXXXIIIIIIII",
+									QC.P"ZZIIZZIIIIII", QC.P"XXIIXXIIIIII",
+									QC.P"ZIZIZIZIIIII", QC.P"XIXIXIXIIIII",
+									QC.P"IIIIZZZZIIII", QC.P"IIIIXXXXIIII",
+									QC.P"IIIIIIIIZIII", QC.P"IIIIIIIIIZII", 
+									QC.P"IIIIIIIIIIZI", QC.P"IIIIIIIIIIIZ"
+								])
+
 #=
 	Here are some planar layouts that we look at for comparison.
-	Qubits 0-7 are data qubits, 8-11 are ancillas
+	Qubits 1-8 are data qubits, 9-12 are ancillas
 =#
 
 #=
+	4--12--8
+	|  |   |
 	3--11--7
 	|  |   |
 	2--10--6
 	|  |   |
 	1--9---5
-	|  |   |
-	0--8---4
 =#
 
 sandwich_layout = [
-					[0, 1], [0, 8],
 					[1, 2], [1, 9],
 					[2, 3], [2, 10],
-					[3, 11],
-					[4, 5], [4, 8],
+					[3, 4], [3, 11],
+					[4, 12],
 					[5, 6], [5, 9],
 					[6, 7], [6, 10],
-					[7, 11],
-					[8, 9],
+					[7, 8], [7, 11],
+					[8, 12],
 					[9, 10],
-					[10, 11]
+					[10, 11],
+					[11, 12]
 				]
 
 #=
-	3--5--11
+	4--6--12
+	|  |  |
+	3--10-8
 	|  |  |
 	2--9--7
 	|  |  |
-	1--8--6
-	|  |  |
-	0--4--10
+	1--5--11
 =#
 
 buckle_layout = [
-					[0, 1], [0, 4],
-					[1, 2], [1, 8],
+					[1, 2], [1, 5],
 					[2, 3], [2, 9],
-					[3, 5],
-					[4, 8], [4, 10],
+					[3, 4], [3, 10],
+					[4, 6],
 					[5, 9], [5, 11],
-					[6, 7], [6, 8], [6, 10],
-					[7, 9], [7, 11],
-					[8, 9]
+					[6, 10], [6, 12],
+					[7, 8], [7, 9], [7, 11],
+					[8, 10], [8, 12],
+					[9, 10]
 				]
 
 #=
-	2--4---11
+	3--5---12
+	|  |   |
+	2--11--8
 	|  |   |
 	1--10--7
 	|  |   |
-	0--9---6
-	|  |   |
-	8--3---5
+	9--4---6
 =#
 
 s_layout = [
-			[0, 1], [0, 8], [0, 9],
-			[1, 2], [1, 10],
-			[2, 4],
-			[3, 5], [3, 8], [3, 9],
-			[4, 10], [4, 11],
-			[5, 6],
-			[6, 7], [6, 9],
-			[7, 10], [7, 11],
-			[9, 10]
+			[1, 2], [1, 9], [1, 10],
+			[2, 3], [2, 11],
+			[3, 5],
+			[4, 6], [4, 9], [4, 10],
+			[5, 11], [5, 12],
+			[6, 7],
+			[7, 8], [7, 10],
+			[8, 11], [8, 12],
+			[10, 11]
 ]
 
 function all_partitions_cube_prep()
