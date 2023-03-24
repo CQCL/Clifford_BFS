@@ -16,6 +16,18 @@ import ImplicitGraphs as IG
 import IterTools as IT
 import QuantumClifford as QC
 
+"""
+`canonical_state(state)`
+
+We don't want to change a state inplace if it comes from a higher level
+of scope. 
+Also, we can't have our qubits permuted if we're trying to stick to a
+layout.
+"""
+function canonical_state(state)
+	QC.canonicalize_rref!(copy(state))[1]
+end
+
 function cnot_network(initial_state, final_state, layout=nothing)
 	gate_path(state_path(initial_state, final_state, layout))
 end
@@ -30,9 +42,7 @@ function possible_cnots(n_qubits, layout=nothing)
 end
 
 function neighbour_state(current_state, gate)
-	new_state = gate * current_state
-	QC.canonicalize_gott!(new_state)
-	new_state
+	canonical_state(gate * current_state)
 end
 
 function possible_neighbours(layout)
@@ -54,26 +64,23 @@ checking whether every stabilizer is weight-one after the state has
 been canonicalized.  
 """
 function is_separable(state)
-	state_copy = copy(state)
-	QC.canonicalize_gott!(state_copy)
-	all(map(p -> weight(p) == 1, state_copy))
+	all(map(p -> weight(p) == 1, canonical_state(state)))
 end
 
-function state_path(initial_state, final_state::QC.Stabilizer, layout=nothing)
+function state_path(start, target::QC.Stabilizer, layout=nothing)
 	#=
 		For now, I'm going to try assuming that only edge search generates
 		new vertices
 	=#
-	search_graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
-	QC.canonicalize_gott!(initial_state)
-	QC.canonicalize_gott!(final_state)
-	IG.find_path(search_graph, initial_state, final_state)
+	graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
+
+	IG.find_path(graph, canonical_state(start), canonical_state(target))
 end
 
-function state_path(initial_state, final_state::Function, layout=nothing)
-	search_graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
-	QC.canonicalize_gott!(initial_state)
-	IG.find_path(search_graph, initial_state, final_state)
+function state_path(start, target::Function, layout=nothing)
+	graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
+	
+	IG.find_path(graph, canonical_state(start), target)
 end
 
 """
@@ -84,8 +91,8 @@ final state, but it doesn't tell us which CNot we used to get from each
 state to the next. This function brute-force iterates over the possible
 CNots to determine the one that takes you from each vertex to the next. 
 """
-function gate_path(state_path)
-	cnots = possible_cnots(QC.nqubits(state_path[1]))
+function gate_path(state_path, layout=nothing)
+	cnots = possible_cnots(QC.nqubits(state_path[1]), layout)
 	
 	edge_cnot(dx) = begin
 		in_state = state_path[dx]
