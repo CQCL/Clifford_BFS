@@ -156,6 +156,24 @@ s_layout = [
 			[10, 11]
 ]
 
+#=
+	4--8
+	|  |
+	3--7
+	|  |
+	2--6
+	|  |
+	1--5
+=#
+
+tiny_layout = [
+			[1, 2], [1, 5],
+			[2, 3], [2, 6],
+			[3, 4], [3, 7],
+			[4, 8],
+			[5, 6], [6, 7], [7, 8]
+]
+
 function all_partitions_cube_prep()
 	qubits = collect(1:8)
 	x_partitions = collect(IT.subsets(qubits, 4))
@@ -184,3 +202,5 @@ function cube_separable_state(x_partition, z_partition)
 		map(bit -> QC.single_z(8, bit), z_partition)))
 end
 
+function all_partitions_planar_prep()
+end
