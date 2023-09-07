@@ -26,7 +26,8 @@ function measurements_after_gatelist(gatelist; n_stabs=2)
 	errs = brute_force_minimize(output_errors(circ), stab_group)
 	high_weight_errs = filter(err -> weight(err) > 1, errs)
 	
-	[stab_group[dxs] for dxs in postmeasurements(high_weight_errs, stab_group, n_stabs)]
+	[stab_group[dxs] for dxs in
+		postmeasurements(high_weight_errs, stab_group, n_stabs)]
 end
 
 gatelist = map(pr -> QC.sCNOT(pr...),
