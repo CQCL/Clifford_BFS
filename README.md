@@ -4,7 +4,7 @@ This is a slight upgrade of a script I used to show that a hand-derived circuit 
 
 ## How to Replicate The Paper
 
-In order to generate a circuit for non-fault-tolerant preparation of the $\left \vert \bar{+}\bar{+}\bar{+} \right \rangle$ state, we do the following:
+In order to generate a circuit for non-fault-tolerant preparation of the $\left \vert \overline{+}\overline{+}\overline{+} \right \rangle$ state, we do the following:
 
 ```julia
                _
