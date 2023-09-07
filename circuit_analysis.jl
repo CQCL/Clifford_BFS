@@ -17,6 +17,8 @@ qubits(gatelist) = reduce(union, map(qubits, gatelist))
 
 qubits(gate::QC.sCNOT) = [gate.q1, gate.q2]
 
+qubits(gate::QC.sHadamard) = [gate.q]
+
 output_errors(circuit) = union(output_errors_from_input(circuit),
 								output_errors_from_gates(circuit))
 
@@ -47,8 +49,12 @@ function apply(circuit, pauli)
 	output_pauli
 end
 
-function apply_gate(pauli, gate)
+function apply_gate(pauli::QC.PauliOperator, gate)
 	QC.apply!(QC.Stabilizer([pauli]), gate)[1]
+end
+
+function apply_gate(stab::QC.Stabilizer, gate)
+	QC.apply!(stab, gate)
 end
 
 function input_errors(circuit::Circuit)

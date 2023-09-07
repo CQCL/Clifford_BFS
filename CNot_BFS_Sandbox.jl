@@ -1,6 +1,7 @@
 include("CNot_BFS.jl")
 import .CNot_BFS
 
+import Combinatorics as CO
 import IterTools as IT
 import QuantumClifford as QC
 
@@ -157,21 +158,23 @@ s_layout = [
 ]
 
 #=
-	4--8
+	7--8
 	|  |
-	3--7
+	4--6
 	|  |
-	2--6
+	2--5
 	|  |
-	1--5
+	1--3
 =#
 
 tiny_layout = [
-			[1, 2], [1, 5],
-			[2, 3], [2, 6],
-			[3, 4], [3, 7],
-			[4, 8],
-			[5, 6], [6, 7], [7, 8]
+			[1, 2], [1, 3],
+			[2, 4], [2, 5],
+			[3, 5],
+			[4, 6], [4, 7],
+			[5, 6],
+			[6, 8], 
+			[7, 8]
 ]
 
 function all_partitions_cube_prep()
@@ -202,5 +205,51 @@ function cube_separable_state(x_partition, z_partition)
 		map(bit -> QC.single_z(8, bit), z_partition)))
 end
 
-function all_partitions_planar_prep()
+"""
+We'd like to know whether the 10-CNot limit can be reached on a layout
+with square-lattice connectivity.
+We need to be able to measure a pair of stabilizers and a logical X
+onto two qubits in the middle after non-fault-tolerant preparation. 
+
+For now, we assume that the stabiliser pair we measure has to be
+supported on qubits (2, 4, 5, 7), and the logical will be supported
+on qubits (1, 2, 5, 6) (indices off-by-one wrt the paper).
+We search over layouts where the six qubits (1, 2, 4, 5, 6, 7) will be
+adjacent to the two qubits in the middle after a pair of swaps
+"""
+function planar_cube_prep()
+	desired_state = cube_final_state
+
+	close_qubits = [1, 2, 4, 5, 6, 7]
+	perms_6 = map(perm -> close_qubits[perm], collect(CO.permutations(1:6)))
+	perms_2 = [[3, 8], [8, 3]]
+	ctr = 1
+	solutions = []
+	for perm_6 in perms_6
+		@show ctr
+		for perm_2 in perms_2
+			qs = vcat(perm_6, perm_2)
+			layout = [[qs[1], qs[2]], [qs[1], qs[7]],
+						[qs[2], qs[3]], [qs[2], qs[5]],
+						[qs[3], qs[4]], [qs[3], qs[6]],
+						[qs[4], qs[8]],
+						[qs[5], qs[6]], [qs[5], qs[7]],
+						[qs[6], qs[8]]]
+			
+			path = CNot_BFS.state_path(desired_state, CNot_BFS.is_separable, layout, 12)
+			
+			if length(path) < 1 
+				continue
+			end
+			
+			gates = CNot_BFS.gate_path(path, layout)
+			
+			if length(gates) == 10
+				push!(solutions, (layout, gates)) 
+			end
+		end
+		ctr += 1
+	end
+	
+	solutions
 end
