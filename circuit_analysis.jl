@@ -21,7 +21,7 @@ qubits(gate::QC.sHadamard) = [gate.q]
 
 output_errors(circuit) = union(output_errors_from_input(circuit),
 								output_errors_from_gates(circuit))
-
+ 
 output_errors_from_input(circuit::Circuit) = map(err -> apply(circuit, err), input_errors(circuit))
 
 function output_errors_from_gates(circuit::Circuit)
@@ -70,7 +70,7 @@ end
 function paulis_on(nq, qubits)
 	id = identity_pauli(nq)
 	single_paulis = map(q -> vcat([id], paulis_on(nq, q)), qubits)
-	big_paulis = map(ps -> reduce(*, ps), IT.product(single_paulis))
+	big_paulis = map(ps -> reduce(*, ps), IT.product(single_pauli...)) 
 	setdiff(flatten(big_paulis), [id])
 end
 
