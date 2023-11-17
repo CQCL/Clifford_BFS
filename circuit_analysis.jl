@@ -21,7 +21,7 @@ qubits(gate::QC.sHadamard) = [gate.q]
 
 output_errors(circuit) = union(output_errors_from_input(circuit),
 								output_errors_from_gates(circuit))
-
+ 
 output_errors_from_input(circuit::Circuit) = map(err -> apply(circuit, err), input_errors(circuit))
 
 function output_errors_from_gates(circuit::Circuit)
