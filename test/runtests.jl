@@ -1,8 +1,9 @@
 using CliffordBFS
 using Test
 
+import CliffordBFS.CNot_BFS as CNot_BFS
 
 @testset "Example tests" begin
-
-	@test 1 == 0 + 1
+	include("../CNot_BFS_Sandbox.jl")
+	@test path = CNot_BFS.gate_path(CNot_BFS.state_path(plus_zero_3, cat_state))
 end

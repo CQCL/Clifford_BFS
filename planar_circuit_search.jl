@@ -46,9 +46,10 @@
 =#
 
 include("CNot_BFS_Sandbox.jl")
-include("circuit_analysis.jl")
 include("circuit_analysis_sandbox.jl")
 
+using circuit_analysis
+# include("circuit_analysis.jl")
 """
 The faces of the cube are independent from the layout
 """
@@ -191,4 +192,3 @@ zero_state = QC.Stabilizer([QC.P"ZIIIIIII", QC.P"IZIIIIII",
 							QC.P"IIZIIIII", QC.P"IIIZIIII",
 							QC.P"IIIIZIII", QC.P"IIIIIZII",
 							QC.P"IIIIIIZI", QC.P"IIIIIIIZ"])
-
