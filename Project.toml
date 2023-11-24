@@ -4,4 +4,8 @@ authors = ["Ben Criger <ben.criger@quantinuum.com>"]
 version = "0.1.0"
 
 [deps]
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
+ImplicitGraphs = "aa20a09e-9376-456a-970d-31341b90bdf0"
+IterTools = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 QuantumClifford = "0525e862-1e90-11e9-3e4d-1b39d7109de1"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
