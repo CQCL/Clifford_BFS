@@ -74,13 +74,13 @@ function state_path(start, target::QC.Stabilizer, layout = nothing, max_states =
     	=#
     graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
 
-    IG.find_path(graph, canonical_state(start), canonical_state(target))
+    IG.find_path(graph, canonical_state(start), canonical_state(target), max_states)
 end
 
 function state_path(start, target::Function, layout = nothing, max_states = 0)
     graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
 
-    IG.find_path(graph, canonical_state(start), target)
+    IG.find_path(graph, canonical_state(start), target, max_states)
 end
 
 """
