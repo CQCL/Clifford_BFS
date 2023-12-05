@@ -1,5 +1,4 @@
-include("CNot_BFS.jl")
-import .CNot_BFS
+import CliffordBFS.CNot_BFS
 
 import Combinatorics as CO
 import IterTools as IT
