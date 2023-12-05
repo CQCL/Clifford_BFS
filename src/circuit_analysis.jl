@@ -97,6 +97,7 @@ function postmeasurements(errors, stab_group, n_meas)
 end
 
 function generated_group(gens)
+    n_q = gens[1].nqubits
     pauli_product = subset -> prod(subset, init=identity_pauli(n_q))
     collect(map(pauli_product, IT.subsets(gens)))
 end
