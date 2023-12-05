@@ -1,13 +1,3 @@
-#=
-	As of August 11, 2022, only works if you
-	`include("circuit_analysis.jl")` first.
-=#
-
-function generated_group(gens)
-	pauli_product = subset -> prod(subset, init=identity_pauli(8))
-	collect(map(pauli_product, IT.subsets(gens)))
-end
-
 """
 Generates the high-weight errors output from the circuit, and a pair of
 stabilizers we need to measure in order to detect those errors, if such

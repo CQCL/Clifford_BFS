@@ -1,4 +1,4 @@
-import CliffordBFS
+import CliffordBFS as CB
 
 import Combinatorics as CO
 import IterTools as IT
@@ -255,7 +255,7 @@ function all_partitions_cube_prep()
     z_partitions = map(x_p -> setdiff(qubits, x_p), x_partitions)
 
     path_and_length(state) = begin
-        path = CNot_BFS.state_path(state, cube_final_state_2)
+        path = CB.state_path(state, cube_final_state_2)
         path, length(path)
     end
 
@@ -269,7 +269,7 @@ function all_partitions_cube_prep()
         end
     end
 
-    CNot_BFS.gate_path(shortest_path)
+    CB.gate_path(shortest_path)
 end
 
 function cube_separable_state(x_partition, z_partition)
@@ -318,13 +318,13 @@ function planar_cube_prep()
                 [qs[6], qs[8]],
             ]
 
-            path = CNot_BFS.state_path(desired_state, CNot_BFS.is_separable, layout, 12)
+            path = CB.state_path(desired_state, CB.is_separable, layout, 12)
 
             if length(path) < 1
                 continue
             end
 
-            gates = CNot_BFS.gate_path(path, layout)
+            gates = CB.gate_path(path, layout)
 
             if length(gates) == 10
                 push!(solutions, (layout, gates))

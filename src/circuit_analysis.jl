@@ -1,8 +1,3 @@
-"""
-    In this file, I'm going to try to analyze some circuits using
-    QuantumClifford.
-"""
-
 struct Circuit
     gatelist
     nq
@@ -99,4 +94,9 @@ function postmeasurements(errors, stab_group, n_meas)
         end
     end
     output_subsets
+end
+
+function generated_group(gens)
+    pauli_product = subset -> prod(subset, init=identity_pauli(n_q))
+    collect(map(pauli_product, IT.subsets(gens)))
 end
