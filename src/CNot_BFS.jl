@@ -1,20 +1,16 @@
 module CNot_BFS
 
 #=
-	In this module, I'm going to try to figure out a CNot network that
-	prepares a given CSS stabiliser state using a breadth-first search
-	on an implicit graph whose nodes are stabiliser states.
+    In this module, I'm going to try to figure out a CNot network that
+    prepares a given CSS stabiliser state using a breadth-first search
+    on an implicit graph whose nodes are stabiliser states.
 
-	Two nodes will be connected by an edge iff the stabiliser states
-	can be transformed into one another using a single CNot on a
-	user-provided layout. 
+    Two nodes will be connected by an edge iff the stabiliser states
+    can be transformed into one another using a single CNot on a
+    user-provided layout. 
 
-	If no layout is provided, all-to-all connectivity will be assumed.
+    If no layout is provided, all-to-all connectivity will be assumed.
 =#
-
-import ImplicitGraphs as IG
-import IterTools as IT
-import QuantumClifford as QC
 
 """
 `canonical_state(state)`
@@ -69,9 +65,9 @@ end
 
 function state_path(start, target::QC.Stabilizer, layout = nothing, max_states = 0)
     #=
-    		For now, I'm going to try assuming that only edge search generates
-    		new vertices
-    	=#
+    For now, I'm going to try assuming that only edge search generates
+    new vertices
+    =#
     graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
 
     IG.find_path(graph, canonical_state(start), canonical_state(target), max_states)

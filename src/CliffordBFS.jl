@@ -1,9 +1,10 @@
 module CliffordBFS
 
-include("circuit_analysis.jl")
-include("CNot_BFS.jl")
+import ImplicitGraphs as IG
+import IterTools as IT
+import QuantumClifford as QC
 
-function add1(x)
-    x + 1
-end
+include("CNot_BFS.jl")
+include("circuit_analysis.jl")
+
 end # module CliffordBFS
