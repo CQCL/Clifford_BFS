@@ -1,7 +1,5 @@
-module CNot_BFS
-
 #=
-    In this module, I'm going to try to figure out a CNot network that
+    In this file, I'm going to try to figure out a CNot network that
     prepares a given CSS stabiliser state using a breadth-first search
     on an implicit graph whose nodes are stabiliser states.
 
@@ -103,5 +101,3 @@ function gate_path(state_path, layout = nothing)
 
     map(edge_cnot, 1:length(state_path)-1)
 end
-
-end # module CNot_BFS
