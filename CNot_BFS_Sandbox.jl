@@ -1,4 +1,4 @@
-import CliffordBFS.CNot_BFS
+import CliffordBFS
 
 import Combinatorics as CO
 import IterTools as IT
