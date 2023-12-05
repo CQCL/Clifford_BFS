@@ -90,7 +90,7 @@ function gate_path(state_path, layout = nothing)
 
     edge_cnot(dx) = begin
         in_state = state_path[dx]
-        out_state = state_path[dx+1]
+        out_state = state_path[dx + 1]
         for cnot in cnots
             if neighbour_state(in_state, cnot) == out_state
                 return cnot
@@ -99,5 +99,5 @@ function gate_path(state_path, layout = nothing)
         error("no CNot found")
     end
 
-    map(edge_cnot, 1:length(state_path)-1)
+    map(edge_cnot, 1:(length(state_path) - 1))
 end
