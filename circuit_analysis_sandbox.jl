@@ -17,10 +17,12 @@ function measurements_after_gatelist(gatelist; n_stabs=2)
 	stab_group = CB.generated_group(stab_gens)
 
 	errs = CB.brute_force_minimize(CB.output_errors(circ), stab_group)
-	high_weight_errs = filter(err -> CB.weight(err) > 1, errs)
+	
+	high_css_wt(err) = (CB.x_weight(err) > 1) & (CB.z_weight(err) > 1)
+	high_weight_errs = filter(high_css_wt, errs)
 	
 	[stab_group[dxs] for dxs in
-		postmeasurements(high_weight_errs, stab_group, n_stabs)]
+		CB.postmeasurements(high_weight_errs, stab_group, n_stabs)]
 end
 
 gatelist = map(pr -> QC.sCNOT(pr...),
