@@ -101,3 +101,14 @@ function generated_group(gens)
     pauli_product = subset -> prod(subset, init=identity_pauli(n_q))
     collect(map(pauli_product, IT.subsets(gens)))
 end
+
+"""
+`undetected_errors(errors, stabs)`
+
+Which errors from an input list would go undetected by the flawless
+measurement of a set of stabilizers? 
+"""
+function undetected_errors(errors, stabs)
+    syndrome(stabs, err) = map(s -> QC.comm(s, err), stabs)
+    filter(err -> all(syndrome(stabs, err) .== 0x00), errors)
+end
