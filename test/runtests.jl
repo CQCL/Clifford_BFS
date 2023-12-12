@@ -99,3 +99,24 @@ end
         @test length(CB.paulis_on(3, collect(1:nq))) == (4^nq - 1)
     end
 end
+
+@testset "Output errors and postmeasurements for cat state prep" begin
+    gatelist = [QC.sHadamard(1), QC.sCNOT(1, 2),
+                    QC.sCNOT(2, 3), QC.sCNOT(3, 4)]
+
+    circ = CB.Circuit(gatelist, 4)
+
+    stab_gens = [QC.P"XXXX", QC.P"ZZII", QC.P"IZZI", QC.P"IIZZ"]
+
+    stab_group = CB.generated_group(stab_gens)
+
+    errs = CB.brute_force_minimize(CB.output_errors(circ), stab_group)
+
+    high_wt(err) = CB.weight(err) > 1
+    dangerous_errs = filter(high_wt, errs)
+    
+    stab_subgroups = [stab_group[dxs] for dxs in
+                       CB.postmeasurements(dangerous_errs, stab_group, 1)]
+
+    @test in([QC.P"ZIIZ"], stab_subgroups)
+end

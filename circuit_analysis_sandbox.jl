@@ -14,15 +14,21 @@ function measurements_after_gatelist(gatelist; n_stabs=2)
 					QC.P"ZZZZIIII", QC.P"ZZIIZZII",
 					QC.P"ZIZIZIZI", QC.P"IIIIZZZZ"]
 
+	stabs_832 = [QC.P"XXXXXXXX", QC.P"ZZZZIIII", QC.P"ZZIIZZII",
+					QC.P"ZIZIZIZI", QC.P"IIIIZZZZ"]
+
 	stab_group = CB.generated_group(stab_gens)
 
 	errs = CB.brute_force_minimize(CB.output_errors(circ), stab_group)
 	
-	high_css_wt(err) = (CB.x_weight(err) > 1) & (CB.z_weight(err) > 1)
-	high_weight_errs = filter(high_css_wt, errs)
+	#=
+		we need to measure logical operators to detect errors that
+		stabilizer measurement wouldn't detect on its own
+	=#
+	dangerous_errs = CB.undetected_errors(errs, stabs_832)
 	
 	stab_subgroups = [stab_group[dxs] for dxs in
-		CB.postmeasurements(high_weight_errs, stab_group, n_stabs)]
+		CB.postmeasurements(dangerous_errs, stab_group, n_stabs)]
 end
 
 gatelist = map(pr -> QC.sCNOT(pr...),
