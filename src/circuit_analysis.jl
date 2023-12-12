@@ -78,10 +78,6 @@ function brute_force_minimize(paulis, stab_group)
     map(p -> argmin(weight, [p] .* stab_group), paulis)
 end
 
-x_weight(pauli) = count_ones(pauli.xz[1])
-z_weight(pauli) = count_ones(pauli.xz[2])
-weight(pauli) = count_ones(pauli.xz[1] | pauli.xz[2])
-
 """
 Which elements of the stabilizer group, if measured, would detect a 
 given set of errors?

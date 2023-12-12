@@ -48,6 +48,8 @@ function possible_neighbours(layout)
     neighbs
 end
 
+@inline x_weight(p::QC.PauliOperator) = count_ones(p.xz[1])
+@inline z_weight(p::QC.PauliOperator) = count_ones(p.xz[2])
 @inline weight(p::QC.PauliOperator) = count_ones(p.xz[1] | p.xz[2])
 
 """

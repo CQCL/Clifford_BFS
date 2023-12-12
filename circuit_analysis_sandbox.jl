@@ -21,7 +21,7 @@ function measurements_after_gatelist(gatelist; n_stabs=2)
 	high_css_wt(err) = (CB.x_weight(err) > 1) & (CB.z_weight(err) > 1)
 	high_weight_errs = filter(high_css_wt, errs)
 	
-	[stab_group[dxs] for dxs in
+	stab_subgroups = [stab_group[dxs] for dxs in
 		CB.postmeasurements(high_weight_errs, stab_group, n_stabs)]
 end
 
