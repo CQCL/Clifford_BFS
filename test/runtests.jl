@@ -84,3 +84,17 @@ end
     @test test_state == reference_state
 end
 
+@testset "Circuit utility functions" begin
+    gatelist = map(pr -> QC.sCNOT(pr...),
+                [(1, 2), (2, 3), (2, 7), (3, 1), (7, 1), (1, 2)]);
+    circ = CB.Circuit(gatelist, 8)
+
+    @test circ.nq == 8
+    @test Set(CB.qubits(circ)) == Set([1, 2, 3, 7])
+end
+
+@testset "Number of Paulis that can occur after some gate" begin
+    for nq = 1:3
+        @test length(CB.paulis_on(collect(1:nq))) == (4^k - 1)
+    end
+end
