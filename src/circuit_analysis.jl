@@ -62,7 +62,9 @@ end
 function paulis_on(nq, qubits)
     id = identity_pauli(nq)
     single_paulis = map(q -> vcat([id], paulis_on(nq, q)), qubits)
-    big_paulis = map(ps -> reduce(*, ps), IT.product(single_paulis...))
+    big_paulis = map(ps -> reduce(*, ps),
+                        Iterators.product(single_paulis...))
+    
     setdiff(flatten(big_paulis), [id])
 end
 

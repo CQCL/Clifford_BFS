@@ -85,8 +85,9 @@ end
 end
 
 @testset "Circuit utility functions" begin
-    gatelist = map(pr -> QC.sCNOT(pr...),
-                [(1, 2), (2, 3), (2, 7), (3, 1), (7, 1), (1, 2)]);
+    gatelist = [QC.sHadamard(1), QC.sCNOT(1, 2),
+                    QC.sCNOT(2, 3), QC.sCNOT(3, 7)]
+    
     circ = CB.Circuit(gatelist, 8)
 
     @test circ.nq == 8
