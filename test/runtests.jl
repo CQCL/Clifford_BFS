@@ -120,3 +120,24 @@ end
 
     @test in([QC.P"ZIIZ"], stab_subgroups)
 end
+
+@testset "Applying a couple of gates to things" begin
+    @test CB.apply_gate(QC.P"ZZ", QC.sCNOT(1, 2)) == QC.P"IZ"
+
+    stab_gens = [QC.P"XXXX", QC.P"ZZII", QC.P"IZZI", QC.P"IIZZ"]
+    stab = QC.Stabilizer(stab_gens)
+
+    output_stab = CB.apply_gate(stab, QC.sCNOT(1, 2))
+    test_stab = [QC.P"XIXX", QC.P"IZII", QC.P"ZZZI", QC.P"IIZZ"]
+    @test QC.canonicalize(output_stab) == QC.canonicalize(test_stab)
+end
+
+@testset "undetected errors" begin
+    stab = QC.Stabilizer([QC.P"XXXX", QC.P"ZZZZ"])
+
+    errs = CB.paulis_on(4, [1, 2])
+    dangerous_errs = Set(CB.undetected_errors(errs, stab))
+    test_errs = Set([QC.P"XXII", QC.P"YYII", QC.P"ZZII"])
+    
+    @test dangerous_errs == test_errs
+end
