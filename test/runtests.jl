@@ -51,6 +51,13 @@ end
     
 end
 
+@testset "weights" begin
+    pauli = QC.P"XYZX__"
+    @test CB.x_weight(pauli) == 3
+    @test CB.z_weight(pauli) == 2
+    @test CB.weight(pauli) == 4
+end
+
 @testset "is_separable" begin
     state = QC.Stabilizer([QC.P"XYZX", QC.P"_YZX",
                             QC.P"__ZX", QC.P"___X"])
