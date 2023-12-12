@@ -95,6 +95,6 @@ end
 
 @testset "Number of Paulis that can occur after some gate" begin
     for nq = 1:3
-        @test length(CB.paulis_on(collect(1:nq))) == (4^k - 1)
+        @test length(CB.paulis_on(3, collect(1:nq))) == (4^nq - 1)
     end
 end
