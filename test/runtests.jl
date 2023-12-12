@@ -128,8 +128,8 @@ end
     stab = QC.Stabilizer(stab_gens)
 
     output_stab = CB.apply_gate(stab, QC.sCNOT(1, 2))
-    test_stab = [QC.P"XIXX", QC.P"IZII", QC.P"ZZZI", QC.P"IIZZ"]
-    @test QC.canonicalize(output_stab) == QC.canonicalize(test_stab)
+    test_stab = QC.Stabilizer([QC.P"XIXX", QC.P"IZII", QC.P"ZZZI", QC.P"IIZZ"])
+    @test QC.canonicalize!(output_stab) == QC.canonicalize!(test_stab)
 end
 
 @testset "undetected errors" begin
