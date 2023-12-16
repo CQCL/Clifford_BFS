@@ -47,10 +47,6 @@ end
     @test length(CB.possible_cnots(5, star_layout)) == 10
 end
 
-@testset "possible_neighbours by-hand comparison" begin
-    
-end
-
 @testset "weights" begin
     pauli = QC.P"XYZX__"
     @test CB.x_weight(pauli) == 3
