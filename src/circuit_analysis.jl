@@ -60,9 +60,13 @@ function paulis_on(nq, qubit::Int64)
 end
 
 function paulis_on(nq, qubits)
+    if isempty(qubits)
+        return Vector{QC.PauliOperator}()
+    end
+    
     id = identity_pauli(nq)
     single_paulis = map(q -> vcat([id], paulis_on(nq, q)), qubits)
-    big_paulis = map(ps -> reduce(*, ps),
+    big_paulis = map(ps -> reduce(*, ps, init=id),
                         Iterators.product(single_paulis...))
     
     setdiff(flatten(big_paulis), [id])
