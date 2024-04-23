@@ -35,3 +35,8 @@ devenv.local.nix
 
 # pre-commit
 .pre-commit-config.yaml
+
+# python
+__pycache__/
+.pytest_cache/
+
