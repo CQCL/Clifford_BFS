@@ -18,13 +18,16 @@ output_errors_from_input(circuit::Circuit) = map(err -> apply(circuit, err), inp
 
 function output_errors_from_gates(circuit::Circuit)
     output_errors = []
+    
     to_output(circ_frag) = p -> apply(circ_frag, p)
+    
     for dx = 1 : length(circuit.gatelist) - 1
         gate = circuit.gatelist[dx]
         final_circ = circuit.gatelist[dx + 1 : end]
         gate_errors = map(to_output(final_circ), paulis_on(circuit.nq, qubits(gate)))
         output_errors = union(output_errors, gate_errors)
     end
+    
     gate = circuit.gatelist[end]
     output_errors = union(output_errors, paulis_on(circuit.nq, qubits(gate)))
 
@@ -113,6 +116,10 @@ Which errors from an input list would go undetected by the flawless
 measurement of a set of stabilizers? 
 """
 function undetected_errors(errors, stabs)
+    filter(err -> is_undetected(err, stabs), errors)
+end
+
+function is_undetected(err, stabs)
     syndrome(stabs, err) = map(s -> QC.comm(s, err), stabs)
-    filter(err -> all(syndrome(stabs, err) .== 0x00), errors)
+    all(syndrome(stabs, err) .== 0x00)
 end
