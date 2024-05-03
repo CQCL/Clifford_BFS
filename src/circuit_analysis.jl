@@ -8,6 +8,7 @@ qubits(circuit::Circuit) = qubits(circuit.gatelist)
 qubits(gatelist) = reduce(union, map(qubits, gatelist))
 
 qubits(gate::QC.sCNOT) = [gate.q1, gate.q2]
+qubits(gate::QC.sCPHASE) = [gate.q1, gate.q2]
 
 qubits(gate::QC.sHadamard) = [gate.q]
 
