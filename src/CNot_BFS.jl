@@ -63,15 +63,14 @@ function is_separable(state)
     all(map(p -> weight(p) == 1, canonical_state(state)))
 end
 
-function state_path(start, target::QC.Stabilizer, layout = nothing, max_states = 0)
+function state_path(start::T, target::T, layout = nothing, max_states = 0) where T <: QC.Stabilizer
     #=
     For now, I'm going to try assuming that only edge search generates
     new vertices
     =#
-    graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
+    graph = IG.ImplicitGraph{T}(anything -> true, possible_neighbours(layout))
 
-    # IG.find_path_undirected(graph, canonical_state(start), canonical_state(target), max_states)
-    IG.find_path_undirected(graph, canonical_state(start), canonical_state(target))
+    IG.find_path_undirected(graph, canonical_state(start), canonical_state(target), max_states)
 end
 
 function state_path(start, target::T, layout = nothing, max_states = 0) where T <: Function
