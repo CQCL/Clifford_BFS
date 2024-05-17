@@ -70,7 +70,7 @@ function state_path(start, target::QC.Stabilizer, layout = nothing, max_states =
     =#
     graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
 
-    IG.find_path(graph, canonical_state(start), canonical_state(target), max_states)
+    IG.find_path_undirected(graph, canonical_state(start), canonical_state(target), max_states)
 end
 
 function state_path(start, target::T, layout = nothing, max_states = 0) where T <: Function
