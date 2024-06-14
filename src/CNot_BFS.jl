@@ -48,9 +48,9 @@ function possible_neighbours(layout)
     neighbs
 end
 
-@inline x_weight(p::QC.PauliOperator) = count_ones(p.xz[1])
-@inline z_weight(p::QC.PauliOperator) = count_ones(p.xz[2])
-@inline weight(p::QC.PauliOperator) = count_ones(p.xz[1] | p.xz[2])
+@inline x_weight(p::QC.PauliOperator) = sum(map(count_ones, QC.xview(p)))
+@inline z_weight(p::QC.PauliOperator) = sum(map(count_ones, QC.zview(p)))
+@inline weight(p::QC.PauliOperator) = sum(map(count_ones, QC.xview(p) .| QC.zview(p)))
 
 """
 `is_separable(state)`
