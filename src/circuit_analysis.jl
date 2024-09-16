@@ -78,6 +78,14 @@ function paulis_on(nq, qubits)
     setdiff(flatten(big_paulis), [id])
 end
 
+function weight_one_paulis_on(nq, qubits)
+    if isempty(qubits)
+        return Vector{QC.PauliOperator}()
+    end
+    
+    vcat(map(q -> paulis_on(nq, q), qubits)...)
+end
+
 flatten(mat) = reduce(vcat, mat)
 
 identity_pauli(nq) = QC.PauliOperator(repeat([false], 2 * nq))
