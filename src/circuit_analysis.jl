@@ -64,9 +64,9 @@ function preparation_errors(circuit::Circuit)
 
 end
 
-preparation_error(p::PrepX, nq::Int64) = QC.single_z(nq, prep.q)
-preparation_error(p::PrepY, nq::Int64) = QC.single_z(nq, prep.q)
-preparation_error(p::PrepZ, nq::Int64) = QC.single_x(nq, prep.q)
+preparation_error(p::PrepX, nq::Int64) = QC.single_z(nq, p.q)
+preparation_error(p::PrepY, nq::Int64) = QC.single_z(nq, p.q)
+preparation_error(p::PrepZ, nq::Int64) = QC.single_x(nq, p.q)
 
 function open_wire_errors(qs)
 	reduce(union, map(q -> paulis_on(circuit.nq, q), qs))
