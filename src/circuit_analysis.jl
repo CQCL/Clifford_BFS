@@ -45,7 +45,7 @@ function input_errors(circuit::Circuit)
 	qs_left = qubits(circuit)
 	gates = circuit.gatelist
 	gate_dx = 0
-	errs = Vector{PO}([])
+	errs = []
 	while !(isempty(qs_left))
 		gate_dx += 1
 		gate = gates[gate_dx]
