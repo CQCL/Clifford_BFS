@@ -50,7 +50,7 @@ function input_errors(circuit::Circuit)
 		gate_dx += 1
 		gate = gates[gate_dx]
 		local_qs = qubits(gate)
-		if !isa(gate, Prep)
+		if isa(gate, Prep)
 			push!(errs, preparation_error(gate))
 		else
 			qs_to_err = intersect(qs_left, local_qs)
