@@ -46,6 +46,7 @@ function input_errors(circuit::Circuit)
 	gates = circuit.gatelist
 	gate_dx = 0
 	errs = []
+	nq = circuit.nq
 	while !(isempty(qs_left))
 		gate_dx += 1
 		gate = gates[gate_dx]
@@ -54,7 +55,7 @@ function input_errors(circuit::Circuit)
 			push!(errs, preparation_error(gate))
 		else
 			qs_to_err = intersect(qs_left, local_qs)
-			append!(errs, open_wire_errors(qs_to_err))
+			append!(errs, open_wire_errors(nq, qs_to_err))
 		end
 		qs_left = setdiff(qs, local_qs)
 	end
@@ -68,8 +69,8 @@ preparation_error(p::PrepX, nq::Int64) = QC.single_z(nq, p.q)
 preparation_error(p::PrepY, nq::Int64) = QC.single_z(nq, p.q)
 preparation_error(p::PrepZ, nq::Int64) = QC.single_x(nq, p.q)
 
-function open_wire_errors(qs)
-	reduce(union, map(q -> paulis_on(circuit.nq, q), qs))
+function open_wire_errors(nq, qs)
+	reduce(union, map(q -> paulis_on(nq, q), qs))
 end
 
 output_errors_from_input(circuit::Circuit) = map(err -> apply(circuit, err), input_errors(circuit))
