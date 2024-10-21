@@ -57,7 +57,7 @@ function input_errors(circuit::Circuit)
 			qs_to_err = intersect(qs_left, local_qs)
 			append!(errs, open_wire_errors(nq, qs_to_err))
 		end
-		qs_left = setdiff(qs_left, local_qs)
+		qs_left = setdiff(qs, local_qs)
 	end
 end
 
