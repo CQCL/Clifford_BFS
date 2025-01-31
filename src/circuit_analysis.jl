@@ -8,8 +8,11 @@ qubits(circuit::Circuit) = qubits(circuit.gatelist)
 qubits(gatelist) = reduce(union, map(qubits, gatelist))
 
 qubits(gate::QC.sCNOT) = [gate.q1, gate.q2]
+qubits(gate::QC.sCPHASE) = [gate.q1, gate.q2]
 
 qubits(gate::QC.sHadamard) = [gate.q]
+qubits(gate::QC.sPhase) = [gate.q]
+qubits(gate::QC.sInvPhase) = [gate.q]
 
 output_errors(circuit) = union(output_errors_from_input(circuit),
                                 output_errors_from_gates(circuit))
@@ -73,6 +76,14 @@ function paulis_on(nq, qubits)
                         Iterators.product(single_paulis...))
     
     setdiff(flatten(big_paulis), [id])
+end
+
+function weight_one_paulis_on(nq, qubits)
+    if isempty(qubits)
+        return Vector{QC.PauliOperator}()
+    end
+    
+    vcat(map(q -> paulis_on(nq, q), qubits)...)
 end
 
 flatten(mat) = reduce(vcat, mat)

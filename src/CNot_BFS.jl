@@ -48,9 +48,9 @@ function possible_neighbours(layout)
     neighbs
 end
 
-@inline x_weight(p::QC.PauliOperator) = count_ones(p.xz[1])
-@inline z_weight(p::QC.PauliOperator) = count_ones(p.xz[2])
-@inline weight(p::QC.PauliOperator) = count_ones(p.xz[1] | p.xz[2])
+@inline x_weight(p::QC.PauliOperator) = sum(map(count_ones, QC.xview(p)))
+@inline z_weight(p::QC.PauliOperator) = sum(map(count_ones, QC.zview(p)))
+@inline weight(p::QC.PauliOperator) = sum(map(count_ones, QC.xview(p) .| QC.zview(p)))
 
 """
 `is_separable(state)`
@@ -63,18 +63,18 @@ function is_separable(state)
     all(map(p -> weight(p) == 1, canonical_state(state)))
 end
 
-function state_path(start, target::QC.Stabilizer, layout = nothing, max_states = 0)
+function state_path(start::T, target::T, layout = nothing, max_states = 0) where T <: QC.Stabilizer
     #=
     For now, I'm going to try assuming that only edge search generates
     new vertices
     =#
-    graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
+    graph = IG.ImplicitGraph{T}(anything -> true, possible_neighbours(layout))
 
-    IG.find_path(graph, canonical_state(start), canonical_state(target), max_states)
+    IG.find_path_undirected(graph, canonical_state(start), canonical_state(target), max_states)
 end
 
-function state_path(start, target::Function, layout = nothing, max_states = 0)
-    graph = IG.ImplicitGraph{QC.Stabilizer}(anything -> true, possible_neighbours(layout))
+function state_path(start::S, target::T, layout = nothing, max_states = 0) where {S <: QC.Stabilizer, T <: Function}
+    graph = IG.ImplicitGraph{S}(anything -> true, possible_neighbours(layout))
 
     IG.find_path(graph, canonical_state(start), target, max_states)
 end
